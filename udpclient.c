@@ -89,36 +89,36 @@ int main(int argc, char *argv[])
 
     /* Insert credentials */
     
-    bool correctCredentials = false;
+    // bool correctCredentials = false;
     char username[USER_PASS_LENGTH], password[USER_PASS_LENGTH], buffer[NETWORK_BUFFER];
-    for(int i = 0; i < 3 ;i++)//check number of tries to login
+    // for(int i = 0; i < 3 ;i++)//check number of tries to login
+    // {
+    printf("Please enter username:");
+    gets(username);
+    printf("Please enter password:");
+    gets(password);
+    strcpy(buffer, username);
+    strcat(buffer, ":");
+    strcat(buffer, password);
+    //send credential request for confirming to UDP server
+    sendto(sockfd, buffer, NETWORK_BUFFER, 0, (struct sockaddr *)&serverAddr, sizeof(serverAddr));
+    //read credential answer for confirming from UDP server
+    bytesReceived = recvfrom(sockfd, buffer, NETWORK_BUFFER, 0, (struct sockaddr *)&clientAddr, &len);
+    if(buffer[0] == '^' && buffer[1] == 'F')
     {
-        printf("Please enter username:");
-        gets(username);
-        printf("Please enter password:");
-        gets(password);
-        strcpy(buffer, username);
-        strcat(buffer, ":");
-        strcat(buffer, password);
-        //send credential request for confirming to UDP server
-        sendto(sockfd, buffer, NETWORK_BUFFER, 0, (struct sockaddr *)&serverAddr, sizeof(serverAddr));
-        //read credential answer for confirming from UDP server
-        bytesReceived = recvfrom(sockfd, buffer, NETWORK_BUFFER, 0, (struct sockaddr *)&clientAddr, &len);
-        if(buffer[0] == '^' && buffer[1] == 'F')
-        {
-            correctCredentials = true;
-            printf("You have connected successfully to the server.\n\n\n");
-            char callFileServer[20] = "./tcpclient ";
-            strcat(callFileServer, argv[1]);
-            strcat(callFileServer, " 2424");
-            system(callFileServer);
-            close(sockfd);
-            return 0;
-        }
-        else
-            printf("The credentials you have provided are not valid.\n\n");
+        // correctCredentials = true;
+        printf("You have connected successfully to the server.\n\n\n");
+        // char callFileServer[20] = "./tcpclient ";
+        // strcat(callFileServer, argv[1]);
+        // strcat(callFileServer, " 2424");
+        // system(callFileServer);
+        close(sockfd);
+        return 0;
     }
-    printf("You have provided three times wrong credentials.\n");
+        // else
+            // printf("The credentials you have provided are not valid.\n\n");
+    // }
+    // printf("You have provided three times wrong credentials.\n");
 
     close(sockfd);
     return 0;
